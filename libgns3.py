@@ -356,10 +356,12 @@ def bgpConfig (name, conf, commande,tn) :
                 com= com.format(name=router, ip_val = ip_val, AS = AS)
                 write(lastConfig, 'bgp',com, lvl, indice, tn)
             indice +=1
+        time.sleep(1)
          
 
 
     if border == "True" :
+        #time.sleep(1)
         if conf["filter"] == "False" :
             session = "externalSession"
         else :
@@ -376,7 +378,8 @@ def bgpConfig (name, conf, commande,tn) :
                 com = com.format(name=neighbors['0'][0], ip_val = ip_val, AS_neighbor = AS_neighbor)
                 write(lastConfig, 'bgp',com, lvl, indice, tn)
             indice +=1
-
+            
+ 
         advertise = conf['advertise']
         for network_number in advertise :
             comDico = commande['bgp']['advertise']
