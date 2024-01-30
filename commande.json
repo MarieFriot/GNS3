@@ -51,8 +51,8 @@
 
 	"advertise": {"network 2003:8:{AS}:{ip_val}::/64\r": 0}
 },
-"resetCommunity" : [{"configure terminal\r": 1},{"no route-map TAG-COMMUNAUTE permit 10\r": 1}, {"no route-map TAG-COMMUNAUTE permit 20\r": 1}, 
-{"router bgp {AS}\r": 0}, {"address-family ipv6 unicast\r": 1}, {"no neighbor 2003:8:3:{ip_val}::{name} route-map TAG-COMMUNAUTE in\r": 0}],
+"resetCommunity" : [{"configure terminal\r": 1},{"no route-map TAG-COMMUNAUTE permit 10\r": 1}, {"no route-map TAG-COMMUNAUTE permit 20\r": 1}
+],
 
 "setCommunity" : [{"configure terminal\r": 1},{"route-map TAG-COMMUNAUTE permit 10\r": 1},{"set community {AS}:{neighborType} \r": 0}, 
 {"set local-preference {neighborType}\r": 0},{"route-map TAG-COMMUNAUTE permit 20\r": 1}],
@@ -62,14 +62,11 @@
 
 "filterCommunityCustomer" : [{"configure terminal\r": 1}, {"route-map FILTER_CUSTOMER deny 10\r": 1}] ,
 
-"setLocalPref" : [{"configure terminal\r": 1}, {"ip community-list standard MY_COMMUNITY permit {AS_neighbor}:{neighborType}\r": 0},
-{"route-map SET_LOCAL_PREF permit 10\r": 1}, {"match community MY_COMMUNITY\r" : 1}, {"set local-preference {locPref}\r": 0}, 
-{"route-map SET_LOCAL_PREF permit 20\r": 1}],
+"nofilterCommunityPeerProvider" : [{"configure terminal\r": 1}, {"no ip community-list standard CUSTOMER permit {AS}:500\r": 1},
+{"no route-map FILTER_PEER_PROVIDER permit 10\r": 1}, {"no route-map FILTER_PEER_PROVIDER deny 20\r": 1}] ,
 
-"resetLocalPrefRouteMap" : [{"configure terminal\r": 1}, {"no ip community-list standard MY_COMMUNITY permit {AS_neighbor}:{neighborType}\r": 0},
-{"no route-map SET_LOCAL_PREF permit 10\r": 1}, {"no route-map SET_LOCAL_PREF permit 20\r": 1}, {"router bgp {AS}\r": 0}, {"address-family ipv6 unicast\r": 1} ], 
+"nofilterCommunityCustomer" : [{"configure terminal\r": 1}, {"no route-map FILTER_CUSTOMER deny 10\r": 1}] 
 
-"resetLocalPrefInt" : {"no neighbor 2003:8:{AS}:{ip_val}::{name} route-map SET_LOCAL_PREF out\r": 0}
 
 }
 	

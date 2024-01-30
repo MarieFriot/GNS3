@@ -458,6 +458,10 @@ def setCommunity(name, conf, commande, tn):
             com = com.format(neighborType = neighborVal , AS = AS)
             write(lastConfig, 'setCommunity',com, lvl, i, tn)
             
+    if i < len(lastConfig['setCommunity'])  :
+         for j in range(i+1, len(lastConfig['setCommunity'])):
+             del lastConfig['setCommunity'][i+1]
+            
     with open(f"lastConfig/lastConfig{name}.json","w") as f:
          json.dump(lastConfig, f)
                 
@@ -490,6 +494,10 @@ def filterCommunity(name, conf, commande, tn) :
             for com, lvl in comDico.items():
                 com = com.format(AS= AS)
                 write(lastConfig, 'filterCommunityPeerProvider',com, lvl, i, tn)
+        
+        if i < len(lastConfig['filterCommunityPeerProvider'])  :
+             for j in range(i+1, len(lastConfig['filterCommunityPeerProvider'])):
+                 del lastConfig['filterCommunityPeerProvider'][i+1]
                     
         tn.write(b"end\r")  
         tn.read_until(b"#")
@@ -501,6 +509,62 @@ def filterCommunity(name, conf, commande, tn) :
             comDico = commande["filterCommunityCustomer"][i]
             for com, lvl in comDico.items():
                 write(lastConfig, "filterCommunityCustomer",com, lvl, i, tn)
+                
+       
+        if i < len(lastConfig['filterCommunityCustomer'])  :
+             for j in range(i+1, len(lastConfig['filterCommunityCustomer'])):
+                 del lastConfig['filterCommunityCustomer"'][i+1]
+                    
+                    
+        tn.write(b"end\r")  
+        tn.read_until(b"#")
+        
+    
+    with open(f"lastConfig/lastConfig{name}.json","w") as f:
+         json.dump(lastConfig, f)
+    
+def resetFilterCommunity(name, conf, commande, tn) :
+    """
+    Parameters
+    ----------
+    name : Chaine de caractère : nom du routeur 
+    conf : Dictionnaire contenant la configuration de chaques routeur du réseau.
+    commande : Dictionnaire contenant les commandes de configuration d'un routeur cisco.
+    tn : telnetlib.Telnet
+    Returns
+    -------
+    Fonction supprimant les route-map pour filtrer les communautées.
+    """
+    with open(f"lastConfig/lastConfig{name}.json","r") as f:
+        lastConfig = json.load(f)
+    neighborType = conf["neighborRelationship"]
+    
+   
+    if neighborType == "provider" or neighborType == "peer" :
+        AS = conf['as']
+        for i in range(len(commande['nofilterCommunityPeerProvider']) ):
+            comDico = commande['nofilterCommunityPeerProvider'][i]
+            for com, lvl in comDico.items():
+                com = com.format(AS= AS)
+                write(lastConfig, 'filterCommunityPeerProvider',com, lvl, i, tn)
+                
+        if i < len(lastConfig['filterCommunityPeerProvider'])  :
+             for j in range(i+1, len(lastConfig['filterCommunityPeerProvider'])):
+                 del lastConfig['filterCommunityPeerProvider'][i+1]
+                    
+        tn.write(b"end\r")  
+        tn.read_until(b"#")
+        
+    
+    else :
+        for i in range(len(commande["nofilterCommunityCustomer"]) ):
+            comDico = commande["nofilterCommunityCustomer"][i]
+            for com, lvl in comDico.items():
+                write(lastConfig, "filterCommunityCustomer",com, lvl, i, tn)
+                
+        if i < len(lastConfig['filterCommunityCustomer'])  :
+             for j in range(i+1, len(lastConfig['filterCommunityCustomer'])):
+                 del lastConfig['filterCommunityCustomer'][i+1]
                     
         tn.write(b"end\r")  
         tn.read_until(b"#")
@@ -510,4 +574,33 @@ def filterCommunity(name, conf, commande, tn) :
          json.dump(lastConfig, f)
     
 
+def resetCommunity(name,conf,commande,tn) :
+    """
+    Parameters
+    ----------
+    name : Chaine de caractère : nom du routeur 
+    conf : Dictionnaire contenant la configuration de chaques routeur du réseau.
+    commande : Dictionnaire contenant les commandes de configuration d'un routeur cisco.
+    tn : telnetlib.Telnet
+    Returns
+    -------
+    Efface la configuration des communautés sur un routeur de bordure.
+    """
+    with open(f"lastConfig/lastConfig{name}.json","r") as f:
+        lastConfig = json.load(f)
+        
+    for i in range(len(commande['resetCommunity'])):
+        comDico = commande["resetCommunity"][i]
+        for com, lvl in comDico.items():
+            write(lastConfig, "setCommunity",com, lvl, i, tn)
+            
+        
+    tn.write(b"end\r")  
+    tn.read_until(b"#")
     
+    if i < len(lastConfig['setCommunity'])  :
+        for j in range(i+1, len(lastConfig['setCommunity'])):
+            del lastConfig['setCommunity'][i+1]
+            
+    with open(f"lastConfig/lastConfig{name}.json","w") as f:
+          json.dump(lastConfig, f)
