@@ -14,6 +14,8 @@ En plus de la configuration dynamique voici les opérations possibles :
 Concernant le réseau voici son architecture :
   - 4 AS différentes (111, 222, 333, 444). 
   - Les AS 111,333 et 444 font du rip. L'AS 222 de l'Ospf (avec également les métriques ospf).
+  - Les interfaces des routeurs de bordure en OSPF connectées à une autre AS sont en mode passive interface pour que les routeurs de l'as connaissent le next hop en n'évitant de mélanger les deux as.
+  - Les interfaces des routeurs de bordure en RIP connectées à une autre AS font du resdistribute connected pour la même raison.
   - Les 4 AS font du bgp.
   - Les AS 111 et 222 sont reliées à une LAN et annoncent en eBGP les réseaux correspondants à leur LAN.
   - Chaques AS tagge les routes recues des AS voisines en fonction de leur relation et leur applique une localPreference correspondante.
